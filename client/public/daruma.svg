@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Body - traditional daruma shape -->
+  <ellipse cx="50" cy="58" rx="42" ry="38" fill="#E53935"/>
+
+  <!-- Face area - white oval -->
+  <ellipse cx="50" cy="52" rx="28" ry="24" fill="#FFF8E1"/>
+
+  <!-- Left eye - filled (goal achieved) -->
+  <ellipse cx="38" cy="48" rx="8" ry="9" fill="#1a1a2e"/>
+
+  <!-- Right eye - empty (goal pending) -->
+  <ellipse cx="62" cy="48" rx="8" ry="9" fill="#FFF8E1" stroke="#1a1a2e" stroke-width="2"/>
+
+  <!-- Eyebrows - traditional style -->
+  <path d="M 26 38 Q 38 32 50 38" stroke="#1a1a2e" stroke-width="3" fill="none"/>
+  <path d="M 50 38 Q 62 32 74 38" stroke="#1a1a2e" stroke-width="3" fill="none"/>
+
+  <!-- Nose -->
+  <ellipse cx="50" cy="58" rx="3" ry="2" fill="#D32F2F"/>
+
+  <!-- Mustache/Beard lines -->
+  <path d="M 35 65 Q 50 72 65 65" stroke="#1a1a2e" stroke-width="2" fill="none"/>
+  <path d="M 38 70 Q 50 76 62 70" stroke="#1a1a2e" stroke-width="1.5" fill="none"/>
+
+  <!-- Gold decorative band -->
+  <path d="M 15 30 Q 50 18 85 30" stroke="#FFB300" stroke-width="6" fill="none"/>
+  <path d="M 18 33 Q 50 22 82 33" stroke="#FDD835" stroke-width="2" fill="none"/>
+
+  <!-- Kanji character 福 (fortune) suggestion on forehead -->
+  <text x="50" y="34" font-size="10" fill="#FFB300" text-anchor="middle" font-weight="bold">福</text>
+</svg>

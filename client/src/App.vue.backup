@@ -1,0 +1,311 @@
+<template>
+  <div class="min-h-screen bg-gray-100">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Logo -->
+          <div class="flex items-center gap-3">
+            <img src="/daruma.svg" alt="Daruma" class="w-10 h-10" />
+            <h1 class="text-xl font-bold text-gray-900">Daruma 任務管理</h1>
+          </div>
+
+          <!-- View Tabs -->
+          <nav class="hidden md:flex items-center gap-1">
+            <button
+              v-for="view in views"
+              :key="view.id"
+              @click="taskStore.setView(view.id)"
+              :class="[
+                'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                taskStore.currentView === view.id
+                  ? 'bg-daruma-red text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              ]"
+            >
+              <component :is="view.icon" class="w-5 h-5" />
+              {{ view.label }}
+            </button>
+          </nav>
+
+          <!-- Add Button -->
+          <button
+            @click="openTaskForm()"
+            class="flex items-center gap-2 px-4 py-2 bg-daruma-red text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            <PlusIcon class="w-5 h-5" />
+            <span class="hidden sm:inline">新增任務</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile View Selector -->
+    <div class="md:hidden bg-white border-b border-gray-200 px-4 py-2">
+      <select
+        :value="taskStore.currentView"
+        @change="taskStore.setView($event.target.value)"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+      >
+        <option v-for="view in views" :key="view.id" :value="view.id">
+          {{ view.label }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <!-- Stats Bar -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-xl shadow-sm p-4">
+          <p class="text-sm text-gray-500">全部任務</p>
+          <p class="text-2xl font-bold text-gray-900">{{ taskStore.taskStats.total }}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-4">
+          <p class="text-sm text-gray-500">待辦</p>
+          <p class="text-2xl font-bold text-gray-500">{{ taskStore.taskStats.todo }}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-4">
+          <p class="text-sm text-gray-500">進行中</p>
+          <p class="text-2xl font-bold text-blue-600">{{ taskStore.taskStats.inProgress }}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-4">
+          <p class="text-sm text-gray-500">完成</p>
+          <p class="text-2xl font-bold text-green-600">{{ taskStore.taskStats.done }}</p>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+        <div class="flex flex-wrap items-center gap-4">
+          <!-- Search -->
+          <div class="flex-1 min-w-[200px]">
+            <div class="relative">
+              <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                v-model="searchQuery"
+                @input="taskStore.setSearchQuery(searchQuery)"
+                type="text"
+                placeholder="搜尋任務..."
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-daruma-red focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <!-- Priority Filter -->
+          <select
+            v-model="selectedPriority"
+            @change="taskStore.setFilterPriority(selectedPriority)"
+            class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-daruma-red focus:border-transparent"
+          >
+            <option value="all">所有優先順序</option>
+            <option value="high">高</option>
+            <option value="medium">中</option>
+            <option value="low">低</option>
+          </select>
+
+          <!-- Status Filter -->
+          <select
+            v-model="selectedStatus"
+            @change="taskStore.setFilterStatus(selectedStatus)"
+            class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-daruma-red focus:border-transparent"
+          >
+            <option value="all">所有狀態</option>
+            <option value="todo">待辦</option>
+            <option value="in-progress">進行中</option>
+            <option value="done">完成</option>
+          </select>
+
+          <!-- Clear Filters -->
+          <button
+            v-if="hasActiveFilters"
+            @click="clearFilters"
+            class="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            清除篩選
+          </button>
+        </div>
+
+        <!-- Tags Filter -->
+        <div v-if="taskStore.tags.length > 0" class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
+          <span class="text-sm text-gray-500">標籤:</span>
+          <button
+            v-for="tag in taskStore.tags"
+            :key="tag"
+            @click="toggleTagFilter(tag)"
+            :class="[
+              'px-3 py-1 text-sm rounded-full transition-colors',
+              selectedTags.includes(tag)
+                ? 'bg-daruma-red text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            ]"
+          >
+            {{ tag }}
+          </button>
+        </div>
+      </div>
+
+      <!-- View Content -->
+      <div v-if="taskStore.isLoading" class="flex items-center justify-center py-12">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-daruma-red"></div>
+      </div>
+
+      <template v-else>
+        <KanbanView
+          v-if="taskStore.currentView === 'kanban'"
+          @edit="openTaskForm"
+          @delete="handleDelete"
+        />
+        <ListView
+          v-else-if="taskStore.currentView === 'list'"
+          @edit="openTaskForm"
+          @delete="handleDelete"
+        />
+        <CalendarView
+          v-else-if="taskStore.currentView === 'calendar'"
+          @edit="openTaskForm"
+          @create="openTaskForm"
+        />
+        <TimelineView
+          v-else-if="taskStore.currentView === 'timeline'"
+          @edit="openTaskForm"
+        />
+      </template>
+    </main>
+
+    <!-- Task Form Modal -->
+    <TaskForm
+      v-if="showTaskForm"
+      :task="editingTask"
+      @close="closeTaskForm"
+      @saved="handleTaskSaved"
+    />
+
+    <!-- Delete Confirmation Modal -->
+    <div
+      v-if="showDeleteConfirm"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm mx-4">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">確認刪除</h3>
+        <p class="text-gray-600 mb-6">確定要刪除這個任務嗎？此操作無法復原。</p>
+        <div class="flex justify-end gap-3">
+          <button
+            @click="showDeleteConfirm = false"
+            class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            取消
+          </button>
+          <button
+            @click="confirmDelete"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            刪除
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import {
+  PlusIcon,
+  MagnifyingGlassIcon,
+  ViewColumnsIcon,
+  ListBulletIcon,
+  CalendarIcon,
+  ChartBarIcon
+} from '@heroicons/vue/24/outline'
+import { useTaskStore } from './stores/taskStore'
+import TaskForm from './components/TaskForm.vue'
+import KanbanView from './components/KanbanView.vue'
+import ListView from './components/ListView.vue'
+import CalendarView from './components/CalendarView.vue'
+import TimelineView from './components/TimelineView.vue'
+
+const taskStore = useTaskStore()
+
+const views = [
+  { id: 'kanban', label: '看板', icon: ViewColumnsIcon },
+  { id: 'list', label: '列表', icon: ListBulletIcon },
+  { id: 'calendar', label: '日曆', icon: CalendarIcon },
+  { id: 'timeline', label: '時間軸', icon: ChartBarIcon }
+]
+
+// Form state
+const showTaskForm = ref(false)
+const editingTask = ref(null)
+
+// Filter state
+const searchQuery = ref('')
+const selectedPriority = ref('all')
+const selectedStatus = ref('all')
+const selectedTags = ref([])
+
+// Delete confirmation
+const showDeleteConfirm = ref(false)
+const taskToDelete = ref(null)
+
+const hasActiveFilters = computed(() => {
+  return (
+    searchQuery.value !== '' ||
+    selectedPriority.value !== 'all' ||
+    selectedStatus.value !== 'all' ||
+    selectedTags.value.length > 0
+  )
+})
+
+onMounted(async () => {
+  await Promise.all([
+    taskStore.fetchTasks(),
+    taskStore.fetchTags()
+  ])
+})
+
+function openTaskForm(task = null) {
+  editingTask.value = task
+  showTaskForm.value = true
+}
+
+function closeTaskForm() {
+  showTaskForm.value = false
+  editingTask.value = null
+}
+
+function handleTaskSaved() {
+  closeTaskForm()
+}
+
+function handleDelete(taskId) {
+  taskToDelete.value = taskId
+  showDeleteConfirm.value = true
+}
+
+async function confirmDelete() {
+  if (taskToDelete.value) {
+    await taskStore.deleteTask(taskToDelete.value)
+  }
+  showDeleteConfirm.value = false
+  taskToDelete.value = null
+}
+
+function toggleTagFilter(tag) {
+  const index = selectedTags.value.indexOf(tag)
+  if (index === -1) {
+    selectedTags.value.push(tag)
+  } else {
+    selectedTags.value.splice(index, 1)
+  }
+  taskStore.setFilterTags(selectedTags.value)
+}
+
+function clearFilters() {
+  searchQuery.value = ''
+  selectedPriority.value = 'all'
+  selectedStatus.value = 'all'
+  selectedTags.value = []
+  taskStore.clearFilters()
+}
+</script>
