@@ -14,6 +14,9 @@
 ### セカンドブレイン — Markdown ノート
 ![ノートリストとエディタ](docs/screenshots/second-brain.png)
 
+### AI エージェント
+![エージェントカードと実行コントロール](docs/screenshots/agents.png)
+
 ### 設定
 ![設定ページ](docs/screenshots/settings.png)
 

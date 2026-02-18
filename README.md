@@ -14,6 +14,9 @@
 ### Second Brain — Markdown Notes
 ![Second Brain section showing the notes list and editor](docs/screenshots/second-brain.png)
 
+### AI Agents
+![Agents page showing agent cards with system prompts and run controls](docs/screenshots/agents.png)
+
 ### Settings
 ![Settings page showing data storage, appearance, and editor options](docs/screenshots/settings.png)
 

@@ -14,6 +14,9 @@
 ### 第二大腦 — Markdown 筆記
 ![第二大腦筆記列表與編輯器](docs/screenshots/second-brain.png)
 
+### AI 代理人
+![代理人頁面顯示 Agent 卡片與執行控制](docs/screenshots/agents.png)
+
 ### 設定
 ![設定頁面](docs/screenshots/settings.png)
 
