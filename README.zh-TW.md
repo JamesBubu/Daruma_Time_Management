@@ -6,6 +6,19 @@
 
 ---
 
+## 截圖
+
+### 任務管理 — 看板視圖
+![Kanban 任務看板](docs/screenshots/landing.png)
+
+### 第二大腦 — Markdown 筆記
+![第二大腦筆記列表與編輯器](docs/screenshots/second-brain.png)
+
+### 設定
+![設定頁面](docs/screenshots/settings.png)
+
+---
+
 ## 功能模組
 
 ### 任務管理
@@ -15,8 +28,9 @@
 - 進階篩選（搜尋、優先度、狀態、標籤）
 
 ### 第二大腦（筆記）
+- 每篇筆記儲存為獨立的 **`.md` 檔案**（含 YAML frontmatter）
 - Markdown 編輯器，支援即時預覽切換
-- 800ms debounce 自動儲存
+- 可設定的自動儲存延遲（預設 800ms）
 - 任務↔筆記雙向關聯
 - 任務卡顯示筆記 backlink badge，點擊直接跳轉
 

@@ -26,7 +26,7 @@ export function writeSettings(settings) {
 }
 
 // Resolve a custom path or fall back to default filename in DATA_DIR
-function resolve(customPath, filename) {
+function resolveFile(customPath, filename) {
   if (customPath && isAbsolute(customPath)) return customPath;
   return join(DATA_DIR, filename);
 }
@@ -34,10 +34,19 @@ function resolve(customPath, filename) {
 export function getDataPaths() {
   const s = readSettings();
   return {
-    tasks:  resolve(s.paths?.tasks,  'tasks.json'),
-    notes:  resolve(s.paths?.notes,  'notes.json'),
-    agents: resolve(s.paths?.agents, 'agents.json'),
+    tasks:        resolveFile(s.paths?.tasks,  'tasks.json'),
+    agents:       resolveFile(s.paths?.agents, 'agents.json'),
+    // notesLegacy: old single-file path used for migration detection
+    notesLegacy:  join(DATA_DIR, 'notes.json'),
   };
+}
+
+// Notes are stored as individual .md files in a directory
+export function getNotesDir() {
+  const s = readSettings();
+  const custom = s.paths?.notes;
+  if (custom && isAbsolute(custom)) return custom;
+  return join(DATA_DIR, 'notes');
 }
 
 export function getAgentTimeout() {

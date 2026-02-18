@@ -1,6 +1,9 @@
 <template>
   <div class="space-y-2">
-    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ label }}</label>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ label }}</label>
+      <p v-if="description" class="text-xs text-gray-400 mt-0.5">{{ description }}</p>
+    </div>
     <div class="flex gap-2">
       <input
         type="text"
@@ -45,13 +48,14 @@
 
 <script setup>
 defineProps({
-  label:      { type: String, required: true },
-  modelValue: { type: String, default: '' },
-  placeholder:{ type: String, default: '' },
-  testResult: { type: Object, default: null },
-  isTesting:  { type: Boolean, default: false },
-  isSaving:   { type: Boolean, default: false },
-  t:          { type: Function, required: true }
+  label:       { type: String, required: true },
+  description: { type: String, default: '' },
+  modelValue:  { type: String, default: '' },
+  placeholder: { type: String, default: '' },
+  testResult:  { type: Object, default: null },
+  isTesting:   { type: Boolean, default: false },
+  isSaving:    { type: Boolean, default: false },
+  t:           { type: Function, required: true }
 })
 
 defineEmits(['update:modelValue', 'test', 'save'])

@@ -6,6 +6,19 @@
 
 ---
 
+## Screenshots
+
+### Task Manager — Kanban View
+![Landing page showing the Kanban task board](docs/screenshots/landing.png)
+
+### Second Brain — Markdown Notes
+![Second Brain section showing the notes list and editor](docs/screenshots/second-brain.png)
+
+### Settings
+![Settings page showing data storage, appearance, and editor options](docs/screenshots/settings.png)
+
+---
+
 ## Features
 
 ### Task Manager
@@ -15,16 +28,25 @@
 - Advanced filters: search, priority, status, tags
 
 ### Second Brain (Notes)
+- Each note saved as an individual **`.md` file** (with YAML frontmatter)
 - Markdown editor with one-click preview toggle
-- 800ms debounce auto-save
+- Configurable auto-save delay (default 800ms)
 - Bidirectional task ↔ note linking
 - Note backlink badges on task cards; click to navigate
 
 ### AI Agents
 - Create agents with custom System Prompts
-- Runs locally via `claude --print` CLI (60-second timeout)
+- Runs locally via `claude --print` CLI (configurable timeout)
 - Enable/disable toggle, inline edit settings
 - Built-in examples: Summarizer, Code Explainer, Task Decomposer
+
+### Settings
+- Configurable storage paths for tasks, notes folder, and agents
+- Appearance: language, dark mode, default task view
+- Editor: auto-save delay, default mode (edit / preview)
+- Agent runner: execution timeout
+- In-app documentation and keyboard shortcuts reference
+- [GitHub repository link](https://github.com/JamesBubu/Daruma_Time_Management)
 
 ---
 
@@ -38,6 +60,7 @@
 │ Sidebar  │           Calendar / Timeline     │
 │ 60–240px │  Second Brain → Markdown notes    │
 │          │  Agents → Claude CLI runner       │
+│          │  Settings → storage / prefs       │
 └──────────┴──────────────────────────────────┘
 ```
 
@@ -48,7 +71,7 @@
 | Markdown | marked v12 |
 | Icons | @heroicons/vue |
 | Backend | Express.js (ESM) |
-| Storage | Local JSON files (never committed) |
+| Storage | Local files — JSON for tasks/agents, `.md` files for notes |
 | AI | Claude Code CLI (`claude --print`) |
 
 ---
@@ -68,8 +91,8 @@ cd Daruma_Time_Management
 
 # 2. Initialize local data files (kept out of git)
 cp server/data/tasks.example.json  server/data/tasks.json
-cp server/data/notes.example.json  server/data/notes.json
 cp server/data/agents.example.json server/data/agents.json
+# Notes are stored as .md files in server/data/notes/ — created automatically
 
 # 3. Install dependencies
 cd server && npm install && cd ..
@@ -92,17 +115,36 @@ Open **http://localhost:5173** in your browser.
 
 ## Data & Privacy
 
-Personal data (tasks, notes, agent configs) is stored in `server/data/*.json` and listed in `.gitignore` — it is never committed to git.
+Personal data is stored locally and listed in `.gitignore` — it is **never committed to git**.
 
 ```
 server/data/
-├── tasks.json          ← your tasks  (local only)
-├── notes.json          ← your notes  (local only)
-├── agents.json         ← your agents (local only)
+├── tasks.json          ← your tasks     (local only)
+├── notes/              ← your notes     (local only, one .md file per note)
+│   ├── note-00001.md
+│   └── note-00002.md
+├── agents.json         ← your agents   (local only)
 ├── tasks.example.json  ← empty template (committed)
-├── notes.example.json
-└── agents.example.json
+└── agents.example.json ← empty template (committed)
 ```
+
+Each note file uses YAML frontmatter:
+
+```markdown
+---
+id: note-00001
+title: My Note
+linkedTasks: ["task-00001"]
+createdAt: 2025-01-01T00:00:00.000Z
+updatedAt: 2025-01-02T00:00:00.000Z
+---
+
+# My Note
+
+Write your markdown content here...
+```
+
+You can move the notes folder anywhere by setting a custom path in **Settings → Data Storage**.
 
 ---
 
@@ -136,6 +178,14 @@ server/data/
 | PUT | `/api/agents/:id` | Update agent |
 | DELETE | `/api/agents/:id` | Delete agent |
 | POST | `/api/agents/:id/run` | Run agent — body: `{ "message": "..." }` |
+
+### Settings
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/settings` | Get current settings + resolved paths |
+| PUT | `/api/settings` | Update settings (paths, agent timeout) |
+| POST | `/api/settings/test-path` | Validate a custom path |
+| POST | `/api/settings/reset-paths` | Reset all paths to defaults |
 
 ---
 

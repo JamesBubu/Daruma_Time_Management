@@ -30,5 +30,7 @@ Thumbs.db
 # Personal data — keep local only, never commit
 server/data/tasks.json
 server/data/notes.json
+server/data/notes/*.md
+server/data/notes/*.migrated
 server/data/agents.json
 server/data/settings.json

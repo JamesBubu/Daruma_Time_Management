@@ -59,7 +59,7 @@ export const useSettingsStore = defineStore('settings', () => {
       const res = await fetch('/api/settings/test-path', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path })
+        body: JSON.stringify({ path, type })
       })
       const data = await res.json()
       pathTestResults[type] = res.ok ? { ok: true, message: data.message } : { ok: false, message: data.error }
