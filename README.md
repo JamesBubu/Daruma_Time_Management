@@ -1,76 +1,82 @@
-# Daruma — 個人綜合管理工具
+# Daruma Dashboard
 
-> 一個以 **Vue 3 + Express** 為核心的本地端個人管理工具，包含三大模組：任務管理、第二大腦筆記、AI Agent 執行器。
+> A local-first personal management tool built with **Vue 3 + Express**, featuring three integrated modules: Task Manager, Second Brain (notes), and AI Agent runner.
 
-## 功能模組
+**README also available in:** [繁體中文](README.zh-TW.md) · [日本語](README.ja.md)
 
-### 任務管理
-- 四種視角：**看板**（Kanban）、**列表**、**日曆**、**時間軸**
-- 任務支援優先度、狀態、標籤、日期區間
-- Kanban 拖拉改變狀態
-- 進階篩選（搜尋、優先度、狀態、標籤）
+---
 
-### 第二大腦（筆記）
-- Markdown 編輯器，支援即時預覽切換
-- 800ms debounce 自動儲存
-- 任務↔筆記雙向關聯，任務卡顯示筆記 backlink
+## Features
 
-### AI Agent 執行器
-- 建立自訂 System Prompt 的 AI 代理人
-- 呼叫本機 `claude --print` CLI 執行，60 秒 timeout
-- 支援啟用/停用、inline 編輯設定
-- 內建範例 Agent（摘要助手、程式碼解說、任務分解）
+### Task Manager
+- Four views: **Kanban**, **List**, **Calendar**, **Timeline**
+- Priority, status, tags, and date ranges per task
+- Drag-and-drop between Kanban columns
+- Advanced filters: search, priority, status, tags
 
-## 技術架構
+### Second Brain (Notes)
+- Markdown editor with one-click preview toggle
+- 800ms debounce auto-save
+- Bidirectional task ↔ note linking
+- Note backlink badges on task cards; click to navigate
+
+### AI Agents
+- Create agents with custom System Prompts
+- Runs locally via `claude --print` CLI (60-second timeout)
+- Enable/disable toggle, inline edit settings
+- Built-in examples: Summarizer, Code Explainer, Task Decomposer
+
+---
+
+## Architecture
 
 ```
-┌─────────────────────────────────────────┐
-│  Header（語言切換 / 深色模式 / 新增任務）  │
-├──────┬──────────────────────────────────┤
-│      │   Tasks  → Kanban / List /       │
-│Sidebar   Calendar / Timeline            │
-│      │   Second Brain → Markdown 筆記   │
-│      │   Agents → Claude CLI 執行器      │
-└──────┴──────────────────────────────────┘
+┌─────────────────────────────────────────────┐
+│  Header  (language / dark mode / add task)  │
+├──────────┬──────────────────────────────────┤
+│          │  Tasks  → Kanban / List /         │
+│ Sidebar  │           Calendar / Timeline     │
+│ 60–240px │  Second Brain → Markdown notes    │
+│          │  Agents → Claude CLI runner       │
+└──────────┴──────────────────────────────────┘
 ```
 
-| 層 | 技術 |
-|----|------|
+| Layer | Technology |
+|-------|-----------|
 | Frontend | Vue 3 (Composition API) + Pinia + Tailwind CSS |
-| Routing/Layout | Sidebar 收合導航（60px / 240px） |
 | Calendar | FullCalendar v6 |
 | Markdown | marked v12 |
 | Icons | @heroicons/vue |
 | Backend | Express.js (ESM) |
-| Storage | JSON files（本機，不上傳） |
+| Storage | Local JSON files (never committed) |
 | AI | Claude Code CLI (`claude --print`) |
 
-## 快速開始
+---
 
-### 前置需求
+## Getting Started
+
+### Prerequisites
 - Node.js 18+
-- [Claude Code CLI](https://claude.ai/code) 已安裝並登入（Agent 功能需要）
+- [Claude Code CLI](https://claude.ai/code) installed and authenticated *(for Agent feature)*
 
-### 安裝
+### Installation
 
 ```bash
-# Clone
+# 1. Clone the repository
 git clone https://github.com/JamesBubu/Daruma_Time_Management.git
 cd Daruma_Time_Management
 
-# 初始化資料檔（個人資料保存在本機，不進入 git）
-cp server/data/tasks.example.json server/data/tasks.json
-cp server/data/notes.example.json server/data/notes.json
+# 2. Initialize local data files (kept out of git)
+cp server/data/tasks.example.json  server/data/tasks.json
+cp server/data/notes.example.json  server/data/notes.json
 cp server/data/agents.example.json server/data/agents.json
 
-# 安裝 server 依賴
+# 3. Install dependencies
 cd server && npm install && cd ..
-
-# 安裝 client 依賴
 cd client && npm install && cd ..
 ```
 
-### 啟動
+### Start
 
 ```bash
 # Terminal 1 — Backend (port 3001)
@@ -80,54 +86,63 @@ cd server && npm run dev
 cd client && npm run dev
 ```
 
-瀏覽器開啟 http://localhost:5173
+Open **http://localhost:5173** in your browser.
 
-## 資料儲存說明
+---
 
-個人資料（任務、筆記、Agent 設定）儲存在 `server/data/*.json`，已加入 `.gitignore`，不會被 commit。
+## Data & Privacy
+
+Personal data (tasks, notes, agent configs) is stored in `server/data/*.json` and listed in `.gitignore` — it is never committed to git.
 
 ```
 server/data/
-├── tasks.json       ← 個人任務（本機）
-├── notes.json       ← 個人筆記（本機）
-├── agents.json      ← Agent 設定（本機）
-├── tasks.example.json   ← 範本，commit 用
+├── tasks.json          ← your tasks  (local only)
+├── notes.json          ← your notes  (local only)
+├── agents.json         ← your agents (local only)
+├── tasks.example.json  ← empty template (committed)
 ├── notes.example.json
 └── agents.example.json
 ```
 
-## API 端點
+---
+
+## API Reference
 
 ### Tasks
-| Method | Path | 說明 |
-|--------|------|------|
-| GET | `/api/tasks` | 列出全部 |
-| POST | `/api/tasks` | 建立任務 |
-| PUT | `/api/tasks/:id` | 更新 |
-| DELETE | `/api/tasks/:id` | 刪除 |
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/tasks` | List all tasks |
+| POST | `/api/tasks` | Create task |
+| PUT | `/api/tasks/:id` | Update task |
+| DELETE | `/api/tasks/:id` | Delete task |
+| GET | `/api/tags` | List all tags |
+| POST | `/api/tags` | Add a tag |
 
 ### Notes
-| Method | Path | 說明 |
-|--------|------|------|
-| GET | `/api/notes` | 列出全部 |
-| POST | `/api/notes` | 建立筆記 |
-| PUT | `/api/notes/:id` | 更新 |
-| DELETE | `/api/notes/:id` | 刪除（同步清除 task backlink） |
-| POST | `/api/notes/:id/link-task` | 雙向關聯任務 |
-| DELETE | `/api/notes/:id/link-task/:taskId` | 解除關聯 |
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/notes` | List all notes |
+| POST | `/api/notes` | Create note |
+| PUT | `/api/notes/:id` | Update note |
+| DELETE | `/api/notes/:id` | Delete note (clears backlinks) |
+| POST | `/api/notes/:id/link-task` | Link note ↔ task |
+| DELETE | `/api/notes/:id/link-task/:taskId` | Unlink |
 
 ### Agents
-| Method | Path | 說明 |
-|--------|------|------|
-| GET | `/api/agents` | 列出全部 |
-| POST | `/api/agents` | 建立 |
-| PUT | `/api/agents/:id` | 更新設定 |
-| DELETE | `/api/agents/:id` | 刪除 |
-| POST | `/api/agents/:id/run` | 執行（body: `{ message }`） |
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/agents` | List all agents |
+| POST | `/api/agents` | Create agent |
+| PUT | `/api/agents/:id` | Update agent |
+| DELETE | `/api/agents/:id` | Delete agent |
+| POST | `/api/agents/:id/run` | Run agent — body: `{ "message": "..." }` |
 
-## 語言支援
+---
 
-- 繁體中文（預設）
+## Language Support
+
+- **English** (default)
+- 繁體中文
 - 日本語
 
-設定儲存於 `localStorage`，重整後保留。
+Preferences are saved to `localStorage` and persist across sessions.

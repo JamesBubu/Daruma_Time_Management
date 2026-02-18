@@ -1,6 +1,6 @@
 export default {
   app: {
-    title: 'Daruma タスク管理',
+    title: 'Daruma Dashboard',
     loading: '読み込み中...'
   },
   nav: {
