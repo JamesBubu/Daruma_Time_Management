@@ -17,7 +17,7 @@
       </button>
     </div>
 
-    <nav class="flex-1 overflow-y-auto py-2">
+    <nav class="flex-1 overflow-y-auto py-2 flex flex-col">
       <!-- Tasks Section -->
       <div class="mb-1">
         <button
@@ -107,6 +107,23 @@
           <span v-show="!isCollapsed" class="text-sm font-semibold">{{ t('sidebar.agents') }}</span>
         </button>
       </div>
+
+      <!-- Settings (pinned at bottom) -->
+      <div class="mt-auto pt-2 border-t border-gray-200 dark:border-gray-700 mb-1">
+        <button
+          @click="$emit('navigate', { section: 'settings' })"
+          :class="[
+            'w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors rounded-lg',
+            activeSection === 'settings'
+              ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20'
+              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+          ]"
+          :title="t('sidebar.settings')"
+        >
+          <Cog6ToothIcon class="w-5 h-5 flex-shrink-0" />
+          <span v-show="!isCollapsed" class="text-sm font-semibold">{{ t('sidebar.settings') }}</span>
+        </button>
+      </div>
     </nav>
   </aside>
 </template>
@@ -120,6 +137,7 @@ import {
   ClipboardDocumentListIcon,
   BookOpenIcon,
   CpuChipIcon,
+  Cog6ToothIcon,
   ViewColumnsIcon,
   ListBulletIcon,
   CalendarIcon,

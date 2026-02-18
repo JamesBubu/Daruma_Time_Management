@@ -343,6 +343,12 @@
           v-else-if="activeSection === 'agents'"
           :t="t"
         />
+
+        <!-- Settings Section -->
+        <SettingsView
+          v-else-if="activeSection === 'settings'"
+          :t="t"
+        />
       </main>
     </div>
 
@@ -396,6 +402,7 @@ import TimelineView from './components/TimelineView.vue'
 import Sidebar from './components/Sidebar.vue'
 import NotesView from './components/SecondBrain/NotesView.vue'
 import AgentsView from './components/Agents/AgentsView.vue'
+import SettingsView from './components/Settings/SettingsView.vue'
 
 const { locale, darkMode, localeNames, t, setLocale, toggleDarkMode } = useSettings()
 const notesStore = useNotesStore()

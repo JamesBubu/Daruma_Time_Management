@@ -87,12 +87,66 @@ export default {
   },
   settings: {
     language: '語言',
-    darkMode: '深色模式'
+    darkMode: '深色模式',
+    save: '儲存',
+    title: '設定',
+    subtitle: '自訂你的 Daruma Dashboard 使用體驗',
+    appearance: {
+      title: '外觀',
+      defaultTaskView: '預設任務視圖',
+      defaultTaskViewDesc: '進入任務區塊時預設顯示的視圖'
+    },
+    data: {
+      title: '資料儲存',
+      resetDefaults: '還原預設',
+      hint: '留空則使用預設位置（server/data/）。輸入絕對路徑可將檔案儲存在其他位置。',
+      pathPlaceholder: '/絕對/路徑/到/檔案.json',
+      tasksFile: '任務檔案',
+      notesFile: '筆記檔案',
+      agentsFile: '代理人檔案',
+      test: '測試',
+      testing: '測試中...',
+      save: '儲存'
+    },
+    editor: {
+      title: '編輯器',
+      autosaveDelay: '自動儲存延遲',
+      autosaveDelayDesc: '停止輸入後多久自動儲存',
+      defaultMode: '預設模式',
+      mode: {
+        edit: '編輯',
+        preview: '預覽'
+      }
+    },
+    agent: {
+      title: '代理人執行器',
+      timeout: '執行逾時',
+      timeoutDesc: '代理人執行的最長時間'
+    },
+    docs: {
+      title: '說明文件',
+      quickstart: '快速上手',
+      markdown: 'Markdown',
+      shortcuts: '快捷鍵',
+      qs: {
+        step1: { title: '建立任務', desc: '點擊頂部的「新增任務」按鈕開啟表單，填入標題並設定優先順序、日期和標籤。' },
+        step2: { title: '看板管理', desc: '拖曳任務到不同欄位（待辦 / 進行中 / 完成），或切換到列表、日曆、時間軸視圖。' },
+        step3: { title: '撰寫筆記', desc: '從側邊欄開啟第二大腦，用 Markdown 撰寫筆記並與相關任務建立連結。' },
+        step4: { title: '執行代理人', desc: '前往代理人頁面，建立有系統提示的代理人，輸入訊息後按 Enter（或執行）呼叫 Claude CLI。' },
+        step5: { title: '自訂儲存位置', desc: '在設定 → 資料儲存中，設定自訂路徑將資料存在電腦的任何位置。' }
+      },
+      shortcuts: {
+        agentRun: '執行代理人 / 送出訊息',
+        noteSave: '手動儲存筆記',
+        closeModal: '關閉對話框 / 取消'
+      }
+    }
   },
   sidebar: {
     tasks: '任務',
     notes: '第二大腦',
-    agents: '代理人'
+    agents: '代理人',
+    settings: '設定'
   },
   notes: {
     title: '筆記',

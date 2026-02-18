@@ -1,25 +1,19 @@
 import express from 'express';
 import { readFileSync, writeFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { getDataPaths } from '../lib/config.js';
 
 const router = express.Router();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const dataPath = join(__dirname, '../data/tasks.json');
-
-// Helper functions
 function readData() {
-  const data = readFileSync(dataPath, 'utf-8');
-  return JSON.parse(data);
+  const { tasks } = getDataPaths();
+  return JSON.parse(readFileSync(tasks, 'utf-8'));
 }
 
 function writeData(data) {
-  writeFileSync(dataPath, JSON.stringify(data, null, 2));
+  const { tasks } = getDataPaths();
+  writeFileSync(tasks, JSON.stringify(data, null, 2));
 }
 
-// Generate next task ID in format "daruma-00001"
 function generateNextId(tasks) {
   let maxNum = 0;
   for (const task of tasks) {
@@ -29,35 +23,22 @@ function generateNextId(tasks) {
       if (num > maxNum) maxNum = num;
     }
   }
-  const nextNum = maxNum + 1;
-  return `daruma-${String(nextNum).padStart(5, '0')}`;
+  return `daruma-${String(maxNum + 1).padStart(5, '0')}`;
 }
 
-// GET all tasks
 router.get('/tasks', (req, res) => {
-  try {
-    const data = readData();
-    res.json(data.tasks);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch tasks' });
-  }
+  try { res.json(readData().tasks); }
+  catch { res.status(500).json({ error: 'Failed to fetch tasks' }); }
 });
 
-// GET single task
 router.get('/tasks/:id', (req, res) => {
   try {
-    const data = readData();
-    const task = data.tasks.find(t => t.id === req.params.id);
-    if (!task) {
-      return res.status(404).json({ error: 'Task not found' });
-    }
+    const task = readData().tasks.find(t => t.id === req.params.id);
+    if (!task) return res.status(404).json({ error: 'Task not found' });
     res.json(task);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch task' });
-  }
+  } catch { res.status(500).json({ error: 'Failed to fetch task' }); }
 });
 
-// POST new task
 router.post('/tasks', (req, res) => {
   try {
     const data = readData();
@@ -77,76 +58,46 @@ router.post('/tasks', (req, res) => {
     data.tasks.push(newTask);
     writeData(data);
     res.status(201).json(newTask);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to create task' });
-  }
+  } catch { res.status(500).json({ error: 'Failed to create task' }); }
 });
 
-// PUT update task
 router.put('/tasks/:id', (req, res) => {
   try {
     const data = readData();
     const index = data.tasks.findIndex(t => t.id === req.params.id);
-    if (index === -1) {
-      return res.status(404).json({ error: 'Task not found' });
-    }
-    const updatedTask = {
-      ...data.tasks[index],
-      ...req.body,
-      id: req.params.id,
-      updatedAt: new Date().toISOString()
-    };
-    data.tasks[index] = updatedTask;
+    if (index === -1) return res.status(404).json({ error: 'Task not found' });
+    data.tasks[index] = { ...data.tasks[index], ...req.body, id: req.params.id, updatedAt: new Date().toISOString() };
     writeData(data);
-    res.json(updatedTask);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update task' });
-  }
+    res.json(data.tasks[index]);
+  } catch { res.status(500).json({ error: 'Failed to update task' }); }
 });
 
-// DELETE task
 router.delete('/tasks/:id', (req, res) => {
   try {
     const data = readData();
     const index = data.tasks.findIndex(t => t.id === req.params.id);
-    if (index === -1) {
-      return res.status(404).json({ error: 'Task not found' });
-    }
+    if (index === -1) return res.status(404).json({ error: 'Task not found' });
     data.tasks.splice(index, 1);
     writeData(data);
     res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete task' });
-  }
+  } catch { res.status(500).json({ error: 'Failed to delete task' }); }
 });
 
-// GET all tags
 router.get('/tags', (req, res) => {
-  try {
-    const data = readData();
-    res.json(data.tags);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch tags' });
-  }
+  try { res.json(readData().tags); }
+  catch { res.status(500).json({ error: 'Failed to fetch tags' }); }
 });
 
-// POST new tag
 router.post('/tags', (req, res) => {
   try {
     const data = readData();
     const { tag } = req.body;
-    if (!tag) {
-      return res.status(400).json({ error: 'Tag is required' });
-    }
-    if (data.tags.includes(tag)) {
-      return res.status(400).json({ error: 'Tag already exists' });
-    }
+    if (!tag) return res.status(400).json({ error: 'Tag is required' });
+    if (data.tags.includes(tag)) return res.status(400).json({ error: 'Tag already exists' });
     data.tags.push(tag);
     writeData(data);
     res.status(201).json(data.tags);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to create tag' });
-  }
+  } catch { res.status(500).json({ error: 'Failed to create tag' }); }
 });
 
 export default router;

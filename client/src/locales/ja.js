@@ -87,12 +87,66 @@ export default {
   },
   settings: {
     language: '言語',
-    darkMode: 'ダークモード'
+    darkMode: 'ダークモード',
+    save: '保存',
+    title: '設定',
+    subtitle: 'Daruma Dashboard をカスタマイズ',
+    appearance: {
+      title: '外観',
+      defaultTaskView: 'デフォルトタスクビュー',
+      defaultTaskViewDesc: 'タスクセクションを開いたときに表示されるビュー'
+    },
+    data: {
+      title: 'データストレージ',
+      resetDefaults: 'デフォルトに戻す',
+      hint: '空白のままにするとデフォルト（server/data/）が使用されます。絶対パスを入力すると別の場所に保存できます。',
+      pathPlaceholder: '/絶対/パス/ファイル.json',
+      tasksFile: 'タスクファイル',
+      notesFile: 'ノートファイル',
+      agentsFile: 'エージェントファイル',
+      test: 'テスト',
+      testing: 'テスト中...',
+      save: '保存'
+    },
+    editor: {
+      title: 'エディタ',
+      autosaveDelay: '自動保存の遅延',
+      autosaveDelayDesc: '入力を止めてから保存するまでの時間',
+      defaultMode: 'デフォルトモード',
+      mode: {
+        edit: '編集',
+        preview: 'プレビュー'
+      }
+    },
+    agent: {
+      title: 'エージェントランナー',
+      timeout: '実行タイムアウト',
+      timeoutDesc: 'エージェント実行の最大時間'
+    },
+    docs: {
+      title: 'ドキュメント',
+      quickstart: 'クイックスタート',
+      markdown: 'Markdown',
+      shortcuts: 'ショートカット',
+      qs: {
+        step1: { title: 'タスクを作成', desc: 'ヘッダーの「タスク追加」をクリックしてフォームを開き、タイトルと優先度・日付・タグを設定します。' },
+        step2: { title: 'カンバンで管理', desc: 'タスクをドラッグ＆ドロップで列（未着手/進行中/完了）に移動するか、リスト・カレンダー・タイムラインビューを使います。' },
+        step3: { title: 'ノートを書く', desc: 'サイドバーからセカンドブレインを開き、Markdownでノートを書いて関連タスクにリンクします。' },
+        step4: { title: 'エージェントを実行', desc: 'エージェントページでシステムプロンプトを設定し、メッセージを入力してEnter（または実行）でClaude CLIを呼び出します。' },
+        step5: { title: 'ストレージをカスタマイズ', desc: '設定 → データストレージでカスタムパスを設定し、データをPC上の任意の場所に保存できます。' }
+      },
+      shortcuts: {
+        agentRun: 'エージェント実行 / メッセージ送信',
+        noteSave: 'ノートを手動保存',
+        closeModal: 'モーダルを閉じる / キャンセル'
+      }
+    }
   },
   sidebar: {
     tasks: 'タスク',
     notes: 'セカンドブレイン',
-    agents: 'エージェント'
+    agents: 'エージェント',
+    settings: '設定'
   },
   notes: {
     title: 'ノート',

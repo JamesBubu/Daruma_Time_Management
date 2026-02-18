@@ -31,3 +31,4 @@ Thumbs.db
 server/data/tasks.json
 server/data/notes.json
 server/data/agents.json
+server/data/settings.json

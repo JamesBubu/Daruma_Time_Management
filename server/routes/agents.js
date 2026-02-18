@@ -1,22 +1,16 @@
 import express from 'express';
 import { readFileSync, writeFileSync, accessSync, constants } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import { spawn } from 'child_process';
-import { execFileSync } from 'child_process';
+import { spawn, execFileSync } from 'child_process';
+import { getDataPaths, getAgentTimeout } from '../lib/config.js';
 
 const router = express.Router();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const dataPath = join(__dirname, '../data/agents.json');
-
 function readData() {
-  return JSON.parse(readFileSync(dataPath, 'utf-8'));
+  return JSON.parse(readFileSync(getDataPaths().agents, 'utf-8'));
 }
 
 function writeData(data) {
-  writeFileSync(dataPath, JSON.stringify(data, null, 2));
+  writeFileSync(getDataPaths().agents, JSON.stringify(data, null, 2));
 }
 
 function generateNextId(agents) {
@@ -161,7 +155,7 @@ router.post('/agents/:id/run', (req, res) => {
     const timer = setTimeout(() => {
       timedOut = true;
       child.kill('SIGTERM');
-    }, 60000);
+    }, getAgentTimeout());
 
     child.stdout.on('data', (chunk) => { stdout += chunk.toString(); });
     child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });

@@ -94,7 +94,8 @@ import { TrashIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps({
   note: { type: Object, required: true },
-  tasks: { type: Array, default: () => [] }
+  tasks: { type: Array, default: () => [] },
+  autosaveDelay: { type: Number, default: 800 }
 })
 
 const emit = defineEmits(['update', 'delete', 'link-task', 'unlink-task'])
@@ -143,7 +144,7 @@ function onContentInput() {
       isSaving.value = false
       savedAt.value = true
     }, 500)
-  }, 800)
+  }, props.autosaveDelay)
 }
 
 function onLinkTask(event) {

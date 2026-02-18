@@ -48,6 +48,7 @@
         v-if="notesStore.selectedNote"
         :note="notesStore.selectedNote"
         :tasks="tasks"
+        :autosave-delay="settingsStore.clientSettings.autosaveDelay"
         @update="onUpdate"
         @delete="onDelete"
         @link-task="onLinkTask"
@@ -64,9 +65,10 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
+import { onMounted } from 'vue'
 import { BookOpenIcon } from '@heroicons/vue/24/outline'
 import { useNotesStore } from '../../stores/notesStore.js'
+import { useSettingsStore } from '../../stores/settingsStore.js'
 import NoteEditor from './NoteEditor.vue'
 
 const props = defineProps({
@@ -75,6 +77,7 @@ const props = defineProps({
 })
 
 const notesStore = useNotesStore()
+const settingsStore = useSettingsStore()
 
 onMounted(async () => {
   await notesStore.fetchNotes()
