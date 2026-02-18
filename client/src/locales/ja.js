@@ -101,6 +101,7 @@ export default {
       resetDefaults: 'デフォルトに戻す',
       hint: '空白のままにするとデフォルト（server/data/）が使用されます。絶対パスを入力すると別の場所に保存できます。',
       pathPlaceholder: '/絶対/パス/ファイル.json',
+      dirPlaceholder: '/絶対/パス/フォルダ/',
       tasksFile: 'タスクファイル',
       notesDir: 'ノートフォルダ',
       notesDirDesc: '1ノート1ファイルの .md 形式（frontmatter付き）',

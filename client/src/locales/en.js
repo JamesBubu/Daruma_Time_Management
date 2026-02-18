@@ -101,6 +101,7 @@ export default {
       resetDefaults: 'Reset to defaults',
       hint: 'Leave blank to use the default location (server/data/). Enter an absolute path to store files elsewhere.',
       pathPlaceholder: '/absolute/path/to/file.json',
+      dirPlaceholder: '/absolute/path/to/folder/',
       tasksFile: 'Tasks File',
       notesDir: 'Notes Folder',
       notesDirDesc: 'Individual .md files with frontmatter — one per note',

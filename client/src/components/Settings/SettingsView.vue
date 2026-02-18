@@ -88,7 +88,7 @@
         <PathInput
           :label="t('settings.data.notesDir')"
           :description="t('settings.data.notesDirDesc')"
-          :placeholder="settingsStore.resolvedPaths.notes"
+          :placeholder="settingsStore.resolvedPaths.notes || t('settings.data.dirPlaceholder')"
           :model-value="pathDrafts.notes"
           :test-result="settingsStore.pathTestResults.notes"
           :is-testing="settingsStore.isTestingPath.notes"

@@ -101,6 +101,7 @@ export default {
       resetDefaults: '還原預設',
       hint: '留空則使用預設位置（server/data/）。輸入絕對路徑可將檔案儲存在其他位置。',
       pathPlaceholder: '/絕對/路徑/到/檔案.json',
+      dirPlaceholder: '/絕對/路徑/到/資料夾/',
       tasksFile: '任務檔案',
       notesDir: '筆記資料夾',
       notesDirDesc: '每篇筆記一個 .md 檔案（含 frontmatter）',
