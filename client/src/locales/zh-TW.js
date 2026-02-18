@@ -88,5 +88,29 @@ export default {
   settings: {
     language: '語言',
     darkMode: '深色模式'
+  },
+  sidebar: {
+    tasks: '任務',
+    notes: '第二大腦',
+    agents: '代理人'
+  },
+  notes: {
+    title: '筆記',
+    new: '新增',
+    empty: '尚無筆記，點擊新增開始',
+    selectOrCreate: '選擇或建立筆記開始'
+  },
+  agents: {
+    title: '代理人',
+    description: '建立 AI 代理人執行自動化任務',
+    new: '新增代理人',
+    empty: '尚無代理人，點擊新增開始',
+    createTitle: '建立代理人',
+    nameLabel: '名稱',
+    namePlaceholder: '代理人名稱',
+    descLabel: '描述',
+    descPlaceholder: '簡短描述此代理人的用途',
+    systemPromptLabel: 'System Prompt',
+    systemPromptPlaceholder: '設定代理人的角色和行為...'
   }
 }

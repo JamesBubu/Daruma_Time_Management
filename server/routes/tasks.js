@@ -70,6 +70,7 @@ router.post('/tasks', (req, res) => {
       startDate: req.body.startDate || new Date().toISOString(),
       endDate: req.body.endDate || new Date().toISOString(),
       tags: req.body.tags || [],
+      linkedNotes: req.body.linkedNotes || [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };

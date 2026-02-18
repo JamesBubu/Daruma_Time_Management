@@ -88,5 +88,29 @@ export default {
   settings: {
     language: '言語',
     darkMode: 'ダークモード'
+  },
+  sidebar: {
+    tasks: 'タスク',
+    notes: 'セカンドブレイン',
+    agents: 'エージェント'
+  },
+  notes: {
+    title: 'ノート',
+    new: '新規',
+    empty: 'ノートがありません。新規追加してください',
+    selectOrCreate: 'ノートを選択または作成してください'
+  },
+  agents: {
+    title: 'エージェント',
+    description: 'AIエージェントで自動化タスクを実行',
+    new: 'エージェント追加',
+    empty: 'エージェントがありません。新規追加してください',
+    createTitle: 'エージェント作成',
+    nameLabel: '名前',
+    namePlaceholder: 'エージェント名',
+    descLabel: '説明',
+    descPlaceholder: 'このエージェントの用途の説明',
+    systemPromptLabel: 'システムプロンプト',
+    systemPromptPlaceholder: 'エージェントの役割と動作を設定...'
   }
 }

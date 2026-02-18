@@ -26,3 +26,8 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Personal data — keep local only, never commit
+server/data/tasks.json
+server/data/notes.json
+server/data/agents.json

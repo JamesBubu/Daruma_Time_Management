@@ -126,6 +126,26 @@
             </div>
           </div>
 
+          <!-- Linked Notes (backlinks) -->
+          <div v-if="linkedNoteObjects.length > 0">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              📝 相關筆記
+            </label>
+            <div class="flex flex-wrap gap-2">
+              <button
+                v-for="note in linkedNoteObjects"
+                :key="note.id"
+                type="button"
+                @click="navigateToNote(note.id)"
+                class="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors border border-blue-200 dark:border-blue-800"
+              >
+                <span>{{ note.title }}</span>
+                <ArrowTopRightOnSquareIcon class="w-3 h-3 opacity-60" />
+              </button>
+            </div>
+            <p class="text-xs text-gray-400 mt-1.5">點擊筆記可跳轉到第二大腦，或在第二大腦中管理關聯</p>
+          </div>
+
           <!-- Actions -->
           <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
             <button
@@ -149,15 +169,21 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, computed } from 'vue'
+import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps({
   task: { type: Object, default: null },
   tags: { type: Array, default: () => [] },
+  notes: { type: Array, default: () => [] },
   t: { type: Function, required: true }
 })
 
-const emit = defineEmits(['close', 'save', 'add-tag'])
+const emit = defineEmits(['close', 'save', 'add-tag', 'navigate-to-note'])
+
+function navigateToNote(noteId) {
+  emit('navigate-to-note', noteId)
+}
 
 const newTag = ref('')
 
@@ -168,7 +194,14 @@ const form = reactive({
   status: 'todo',
   startDate: '',
   endDate: '',
-  tags: []
+  tags: [],
+  linkedNotes: []
+})
+
+const linkedNoteObjects = computed(() => {
+  return form.linkedNotes
+    .map(nid => props.notes.find(n => n.id === nid))
+    .filter(Boolean)
 })
 
 watch(() => props.task, (task) => {
@@ -180,6 +213,7 @@ watch(() => props.task, (task) => {
     form.startDate = formatDateForInput(task.startDate)
     form.endDate = formatDateForInput(task.endDate)
     form.tags = [...(task.tags || [])]
+    form.linkedNotes = [...(task.linkedNotes || [])]
   } else {
     resetForm()
   }
@@ -198,6 +232,7 @@ function resetForm() {
   form.startDate = ''
   form.endDate = ''
   form.tags = []
+  form.linkedNotes = []
 }
 
 function toggleTag(tag) {

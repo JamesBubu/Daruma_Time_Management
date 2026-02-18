@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import tasksRouter from './routes/tasks.js';
+import notesRouter from './routes/notes.js';
+import agentsRouter from './routes/agents.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -11,6 +13,8 @@ app.use(express.json());
 
 // Routes
 app.use('/api', tasksRouter);
+app.use('/api', notesRouter);
+app.use('/api', agentsRouter);
 
 // Health check
 app.get('/health', (req, res) => {
